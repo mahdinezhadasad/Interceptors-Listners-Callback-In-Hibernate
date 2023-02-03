@@ -1,18 +1,25 @@
 package com.example.interceptors.domain;
 
 import com.example.interceptors.interceptors.EncryptedString;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 
 @Entity
+//@EntityListeners (CreditCardJPACallback.class)
 public class CreditCard {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @EncryptedString
+    
+    
+   // @EncryptedString
+    @Convert(converter = CreditCardConverter.class)
     private String creditCardNumber;
     
     private String cvv;
@@ -49,5 +56,10 @@ public class CreditCard {
     
     public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
+    }
+    @PrePersist
+    public void prePersistCallback(){
+    
+        System.out.println ("JPA PrePresist Callback was called");
     }
 }
